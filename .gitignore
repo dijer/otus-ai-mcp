@@ -1,0 +1,23 @@
+# Python cache
+__pycache__/
+*.py[cod]
+
+# Virtual envs
+.venv/
+venv/
+
+# Local env and secrets
+.env
+.env.*
+!.env.example
+
+# Local runtime data
+/data/
+
+# VS Code local state (keep project MCP config)
+.vscode/*
+!.vscode/mcp.json
+
+# OS files
+.DS_Store
+Thumbs.db

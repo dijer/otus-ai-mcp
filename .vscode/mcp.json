@@ -1,0 +1,20 @@
+{
+  "servers": {
+    "poe2-rag-mcp": {
+      "type": "stdio",
+      "command": "python",
+      "args": [
+        "-m",
+        "src.server.main"
+      ],
+      "cwd": "${workspaceFolder}",
+      "env": {
+        "MCP_ENV": "dev",
+        "MCP_DEBUG": "true",
+        "MCP_INDEX_ROOT": "${workspaceFolder}/sample_docs",
+        "MCP_CHROMA_PATH": "${workspaceFolder}/data/chroma",
+        "MCP_HISTORY_DB_PATH": "${workspaceFolder}/data/history.db"
+      }
+    }
+  }
+}
