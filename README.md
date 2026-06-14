@@ -115,6 +115,21 @@ npx tsx -e "import { handleFindRelevantDocs } from './src/tools/findRelevantDocs
 npx tsx -e "import { handleAskQuestion } from './src/tools/askQuestion.ts'; (async () => { const r = await handleAskQuestion('Как безопасно проходить вторую фазу графа геонора?',5); console.log(JSON.stringify(r, null, 2)); })();"
 ```
 
+## Проверочные промпты
+
+Используй эти промпты в Inspector/IDE после запуска `index_folder("./sample_docs")`.
+
+- `How many key bosses are listed across all acts in the knowledge base?`
+- `How many key bosses are listed in this knowledge base (Act 1 + Endgame)?`
+- `Which boss has the Banana Reprisal mechanic?`
+- `What specific skill does Zekoa use on death?`
+- `List all bosses currently available in the dataset.`
+
+Ожидаемые проверки:
+
+- Ответ про количество боссов должен содержать `5` (из `allActsKeyBosses.md`).
+- Проверка по Zekoa должна содержать: `throws a banana at the player on death`.
+
 ## Docker Compose
 
 Запуск сервера в контейнере:

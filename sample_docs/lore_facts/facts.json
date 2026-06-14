@@ -1,1 +1,31 @@
-{"rareFact":"The optimal re-entry timing into the damage window after Geonor's dash is 1.4 seconds","date":"2026-02-11"}
+{
+	"rareFact": "The optimal re-entry timing into the damage window after Geonor's dash is 1.4 seconds",
+	"date": "2026-02-11",
+	"verificationFacts": [
+		{
+			"id": "VF-017",
+			"fact": "Warden Halbrecht's shockwave ring reaches full expansion in about 1.2 seconds from impact.",
+			"sourceNote": "Internal tactic drill sheet"
+		},
+		{
+			"id": "VF-021",
+			"fact": "Mirefang Broodmother add-wave priority is tagged as M1 > R1 > Boss in training script B-3.",
+			"sourceNote": "Internal tactic drill sheet"
+		},
+		{
+			"id": "VF-034",
+			"fact": "Zekoa's Banana Reprisal projectile is logged as active for 0.9 seconds after death trigger.",
+			"sourceNote": "Arena replay annotation"
+		},
+		{
+			"id": "VF-052",
+			"fact": "Arbiter of Ash phase 2 rain pattern is safest when rotating clockwise after the second marker pulse.",
+			"sourceNote": "Pinnacle review notes"
+		},
+		{
+			"id": "VF-063",
+			"fact": "The team callout 'Ash-Three' means hold burst and reserve one instant movement skill for Final Judgement overlap.",
+			"sourceNote": "Raid callout glossary"
+		}
+	]
+}
