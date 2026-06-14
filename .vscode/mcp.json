@@ -2,10 +2,10 @@
   "servers": {
     "poe2-rag-mcp": {
       "type": "stdio",
-      "command": "python",
+      "command": "npx",
       "args": [
-        "-m",
-        "src.server.main"
+        "tsx",
+        "src/server/main.ts"
       ],
       "cwd": "${workspaceFolder}",
       "env": {
