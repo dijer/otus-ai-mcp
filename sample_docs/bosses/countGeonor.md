@@ -1,25 +1,25 @@
-# Босс: Граф Геонор
+# Boss: Count Geonor
 
-## Фазы
-- Фаза 1: одиночные рывки и конусная атака перед собой.
-- Фаза 2: усиленный удар по дуге, вызов ледяных волков, сокращенные окна безопасности.
+## Phases
+- Phase 1: single dashes and a frontal cone attack.
+- Phase 2: empowered arc strike, summoned ice wolves, shorter safe windows.
 
-## Урон
-- Основной входящий урон: холод + физический.
-- Риск-пики урона: конец рывка и момент завершения дугового удара.
-- Практичный порог защиты: повышенная устойчивость к холоду и запас здоровья для переживания одной ошибки.
+## Damage
+- Main incoming damage: cold + physical.
+- Peak risk moments: dash finish and the end of the arc strike.
+- Practical defense threshold: strong cold resistance and enough life to survive one mistake.
 
-## Абилки
-- Рывок: босс быстро сближается и оставляет короткое окно для контратаки.
-- Дуговой удар: телеграфируется поднятием оружия и разворотом корпуса.
-- Призыв волков: создает давление на позиционирование и перекрывает траектории отхода.
+## Abilities
+- Dash: the boss quickly closes distance and leaves a short counterattack window.
+- Arc strike: telegraphed by weapon raise and body turn.
+- Wolf summon: pressures positioning and blocks retreat paths.
 
-## Тайминги
-- Безопасный вход после рывка: примерно через 1.4 секунды после остановки босса.
-- Окно урона после конусной атаки: около 3 секунд.
-- Во второй фазе окно после дугового удара: короткое, до 1.8 секунды.
+## Timings
+- Safe re-entry after dash: about 1.4 seconds after the boss stops.
+- Damage window after cone attack: about 3 seconds.
+- In phase 2, post-arc-strike window is short: up to 1.8 seconds.
 
-## Практика
-- В первой фазе держитесь на средней дистанции и бейте после рывка.
-- Во второй фазе сначала уклонение по дуге, затем короткая серия урона.
-- При появлении волков первым убирайте того, кто режет маршрут отхода.
+## Practice
+- In phase 1, keep medium range and punish after dash.
+- In phase 2, dodge on the arc first, then do a short damage burst.
+- When wolves appear, kill the one cutting your retreat route first.
