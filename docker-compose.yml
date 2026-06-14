@@ -1,0 +1,58 @@
+services:
+  ollama:
+    image: ollama/ollama:latest
+    container_name: poe2-ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+    restart: unless-stopped
+
+  model-init:
+    image: curlimages/curl:8.12.1
+    container_name: poe2-ollama-model-init
+    depends_on:
+      - ollama
+    restart: "no"
+    command:
+      - sh
+      - -c
+      - |
+        until curl -sf http://ollama:11434/api/tags >/dev/null; do
+          sleep 2
+        done
+        curl -s http://ollama:11434/api/pull \
+          -H 'Content-Type: application/json' \
+          -d '{"name":"qwen2.5:3b","stream":false}'
+
+  mcp:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: poe2-rag-mcp
+    ports:
+      - "3001:3001"
+    environment:
+      MCP_ENV: dev
+      MCP_APP_NAME: poe2-rag-mcp
+      MCP_HTTP_PORT: 3001
+      MCP_INDEX_ROOT: /app/sample_docs
+      MCP_CHROMA_PATH: /app/data/chroma
+      MCP_HISTORY_DB_PATH: /app/data/history.db
+      MCP_LLM_MODEL: qwen2.5:3b
+      MCP_LLM_BASE_URL: http://ollama:11434
+      MCP_RETRIEVAL_TOPK_DEFAULT: 10
+      MCP_RETRIEVAL_RRF_K: 60
+      MCP_GRAPH_MAX_RETRIES: 2
+      MCP_GRAPH_TIMEOUT_MS: 45000
+      MCP_DEBUG: "true"
+    volumes:
+      - ./data:/app/data
+      - ./sample_docs:/app/sample_docs:ro
+    depends_on:
+      - ollama
+      - model-init
+    restart: unless-stopped
+
+volumes:
+  ollama_data:

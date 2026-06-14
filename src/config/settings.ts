@@ -34,6 +34,10 @@ export type Settings = {
 
 let cached: Settings | null = null;
 
+export const resetSettingsCacheForTests = (): void => {
+  cached = null;
+};
+
 export const getSettings = (): Settings => {
   if (cached) {
     return cached;

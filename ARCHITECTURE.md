@@ -161,7 +161,6 @@
 - RETRIEVAL_RRF_K
 - GRAPH_MAX_RETRIES
 - GRAPH_TIMEOUT_MS
-- HISTORY_MAX_RECORDS
 
 ## 7. Ошибки и отказоустойчивость
 
@@ -189,9 +188,6 @@
 - src/tools
 - src/indexing
 - src/retrieval
-- src/graph
-- src/history
-- src/storage
 - src/config
 - src/types
 - tests/unit

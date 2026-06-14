@@ -56,6 +56,24 @@ npm run build
 npm run check
 ```
 
+Тесты:
+
+```bash
+npm run test
+```
+
+Отдельно:
+
+```bash
+npm run test:unit
+npm run test:integration
+npm run test:e2e
+```
+
+Примечание по e2e:
+- `test:e2e` поднимает HTTP сервер внутри теста автоматически.
+- Вручную запускать `npm run dev:http` перед e2e не нужно.
+
 Запуск собранного сервера:
 
 ```bash
@@ -97,6 +115,18 @@ npx tsx -e "import { handleFindRelevantDocs } from './src/tools/findRelevantDocs
 npx tsx -e "import { handleAskQuestion } from './src/tools/askQuestion.ts'; (async () => { const r = await handleAskQuestion('Как безопасно проходить вторую фазу графа геонора?',5); console.log(JSON.stringify(r, null, 2)); })();"
 ```
 
+## Docker Compose
+
+Запуск сервера в контейнере:
+
+```bash
+docker compose up --build
+```
+
+Важно:
+- Compose поднимает `mcp + ollama + model-init` одной командой.
+- На первом запуске `model-init` скачивает `qwen2.5:3b`, это может занять время.
+
 ## Подключение MCP в VS Code
 
 Файл конфигурации: `.vscode/mcp.json`.
@@ -105,6 +135,9 @@ npx tsx -e "import { handleAskQuestion } from './src/tools/askQuestion.ts'; (asy
 
 ## Ограничения текущей версии
 
-- Пока нет отдельного слоя истории SQLite (tool_calls/qa_history/retrieval_traces).
 - Пока нет полного LangGraph-пайплайна (реализован упрощенный corrective flow).
-- Тестовый контур и docker compose еще в процессе.
+
+## CI
+
+- GitHub Actions: `.github/workflows/ci.yml`
+- Запускает `npm run check` и `npm run test`

@@ -10,6 +10,11 @@
     "start": "node dist/server/main.js",
     "start:http": "node dist/server/http.js",
     "check": "tsc --noEmit -p tsconfig.json",
+    "lint": "eslint .",
+    "test": "npm run test:unit && npm run test:integration && npm run test:e2e",
+    "test:unit": "tsx --test tests/unit/**/*.test.ts",
+    "test:integration": "tsx --test tests/integration/**/*.test.ts",
+    "test:e2e": "tsx --test tests/e2e/**/*.test.ts",
     "inspector": "npx @modelcontextprotocol/inspector --transport http --server-url http://localhost:3001/mcp"
   },
   "dependencies": {
@@ -19,8 +24,11 @@
     "zod": "^4.4.3"
   },
   "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@types/node": "^24.10.0",
+    "eslint": "^10.5.0",
     "tsx": "^4.22.4",
     "typescript": "^6.0.3",
-    "@types/node": "^24.10.0"
+    "typescript-eslint": "^8.61.0"
   }
 }
