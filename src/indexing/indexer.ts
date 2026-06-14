@@ -20,23 +20,23 @@ export type ChunkRecord = {
   text: string;
   metadata: {
     source: string;
-    chunk_index: number;
-    start_char: number;
-    end_char: number;
+    chunkIndex: number;
+    startChar: number;
+    endChar: number;
   };
 };
 
 type ManifestFileInfo = {
   sha256: string;
-  chunks_count: number;
-  updated_at: string;
+  chunksCount: number;
+  updatedAt: string;
 };
 
 type Manifest = {
   files: Record<string, ManifestFileInfo>;
-  files_count: number;
-  chunks_count: number;
-  last_indexed_at: string | null;
+  filesCount: number;
+  chunksCount: number;
+  lastIndexedAt: string | null;
 };
 
 const nowIso = (): string => new Date().toISOString();
@@ -79,21 +79,21 @@ const chunkText = (
   text: string,
   chunkSize: number,
   chunkOverlap: number,
-): Array<{ text: string; start_char: number; end_char: number }> => {
+): Array<{ text: string; startChar: number; endChar: number }> => {
   const normalized = text.trim();
   if (!normalized) {
     return [];
   }
 
   const safeOverlap = chunkOverlap >= chunkSize ? Math.floor(chunkSize / 4) : chunkOverlap;
-  const chunks: Array<{ text: string; start_char: number; end_char: number }> = [];
+  const chunks: Array<{ text: string; startChar: number; endChar: number }> = [];
 
   let start = 0;
   while (start < normalized.length) {
     const end = Math.min(start + chunkSize, normalized.length);
     const piece = normalized.slice(start, end).trim();
     if (piece) {
-      chunks.push({ text: piece, start_char: start, end_char: end });
+      chunks.push({ text: piece, startChar: start, endChar: end });
     }
     if (end >= normalized.length) {
       break;
@@ -158,9 +158,9 @@ export const indexDocuments = (params: {
 
   const previousManifest = readJsonSafe<Manifest>(manifestPath, {
     files: {},
-    files_count: 0,
-    chunks_count: 0,
-    last_indexed_at: null,
+    filesCount: 0,
+    chunksCount: 0,
+    lastIndexedAt: null,
   });
 
   const previousChunks = parseJsonLines(chunksPath);
@@ -208,8 +208,8 @@ export const indexDocuments = (params: {
       finalChunks.push(...existing);
       nextFiles[source] = {
         sha256: digest,
-        chunks_count: existing.length,
-        updated_at: oldInfo.updated_at,
+        chunksCount: existing.length,
+        updatedAt: oldInfo.updatedAt,
       };
       continue;
     }
@@ -226,17 +226,17 @@ export const indexDocuments = (params: {
       text: chunk.text,
       metadata: {
         source,
-        chunk_index: idx,
-        start_char: chunk.start_char,
-        end_char: chunk.end_char,
+        chunkIndex: idx,
+        startChar: chunk.startChar,
+        endChar: chunk.endChar,
       },
     }));
 
     finalChunks.push(...fileChunks);
     nextFiles[source] = {
       sha256: digest,
-      chunks_count: fileChunks.length,
-      updated_at: nowIso(),
+      chunksCount: fileChunks.length,
+      updatedAt: nowIso(),
     };
 
     if (oldInfo === undefined) {
@@ -248,9 +248,9 @@ export const indexDocuments = (params: {
 
   const nextManifest: Manifest = {
     files: nextFiles,
-    files_count: Object.keys(nextFiles).length,
-    chunks_count: finalChunks.length,
-    last_indexed_at: nowIso(),
+    filesCount: Object.keys(nextFiles).length,
+    chunksCount: finalChunks.length,
+    lastIndexedAt: nowIso(),
   };
 
   fs.writeFileSync(manifestPath, JSON.stringify(nextManifest, null, 2), "utf-8");
@@ -258,15 +258,15 @@ export const indexDocuments = (params: {
 
   return {
     path: absRoot,
-    glob_pattern: globPattern,
+    globPattern,
     reindex,
-    supported_extensions: [...allowedExts],
-    indexed_files: nextManifest.files_count,
-    chunks_count: nextManifest.chunks_count,
-    new_files: newFiles,
-    updated_files: updatedFiles,
-    unchanged_files: unchangedFiles,
-    skipped_empty_files: skippedEmptyFiles,
+    supportedExtensions: [...allowedExts],
+    indexedFiles: nextManifest.filesCount,
+    chunksCount: nextManifest.chunksCount,
+    newFiles,
+    updatedFiles,
+    unchangedFiles,
+    skippedEmptyFiles,
   };
 };
 
@@ -274,18 +274,18 @@ export const readIndexStatus = (dataDir: string): Record<string, unknown> => {
   const { manifestPath, chunksPath } = getDataPaths(dataDir);
   const manifest = readJsonSafe<Manifest>(manifestPath, {
     files: {},
-    files_count: 0,
-    chunks_count: 0,
-    last_indexed_at: null,
+    filesCount: 0,
+    chunksCount: 0,
+    lastIndexedAt: null,
   });
 
   return {
-    is_indexed: manifest.files_count > 0 || manifest.chunks_count > 0,
-    files_count: manifest.files_count,
-    chunks_count: manifest.chunks_count,
-    last_indexed_at: manifest.last_indexed_at,
-    manifest_path: manifestPath,
-    chunks_path: chunksPath,
+    isIndexed: manifest.filesCount > 0 || manifest.chunksCount > 0,
+    filesCount: manifest.filesCount,
+    chunksCount: manifest.chunksCount,
+    lastIndexedAt: manifest.lastIndexedAt,
+    manifestPath,
+    chunksPath,
   };
 };
 

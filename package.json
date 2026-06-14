@@ -6,8 +6,11 @@
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "dev": "tsx src/server/main.ts",
+    "dev:http": "tsx src/server/http.ts",
     "start": "node dist/server/main.js",
-    "check": "tsc --noEmit -p tsconfig.json"
+    "start:http": "node dist/server/http.js",
+    "check": "tsc --noEmit -p tsconfig.json",
+    "inspector": "npx @modelcontextprotocol/inspector --transport http --server-url http://localhost:3001/mcp"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.29.0",

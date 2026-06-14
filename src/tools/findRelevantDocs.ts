@@ -18,7 +18,7 @@ export const handleFindRelevantDocs = (
   return success({
     message: "Релевантные чанки найдены",
     query,
-    top_k: topK,
+    topK,
     ...found,
     stub: false,
   });

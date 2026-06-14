@@ -1,6 +1,6 @@
 import dotenv from "dotenv";
 
-dotenv.config();
+dotenv.config({ quiet: true });
 
 const readBool = (value: string | undefined, fallback: boolean): boolean => {
   if (value === undefined) {
@@ -20,8 +20,8 @@ const readInt = (value: string | undefined, fallback: number): number => {
 export type Settings = {
   appName: string;
   env: string;
-  ollamaModel: string;
-  ollamaBaseUrl: string;
+  llmModel: string;
+  llmBaseUrl: string;
   chromaPath: string;
   historyDbPath: string;
   indexRoot: string;
@@ -42,8 +42,8 @@ export const getSettings = (): Settings => {
   cached = {
     appName: process.env.MCP_APP_NAME ?? "poe2-rag-mcp",
     env: process.env.MCP_ENV ?? "dev",
-    ollamaModel: process.env.MCP_OLLAMA_MODEL ?? "qwen2.5:3b",
-    ollamaBaseUrl: process.env.MCP_OLLAMA_BASE_URL ?? "http://localhost:11434",
+    llmModel: process.env.MCP_LLM_MODEL ?? process.env.MCP_OLLAMA_MODEL ?? "qwen2.5:3b",
+    llmBaseUrl: process.env.MCP_LLM_BASE_URL ?? process.env.MCP_OLLAMA_BASE_URL ?? "http://localhost:11434",
     chromaPath: process.env.MCP_CHROMA_PATH ?? "./data/chroma",
     historyDbPath: process.env.MCP_HISTORY_DB_PATH ?? "./data/history.db",
     indexRoot: process.env.MCP_INDEX_ROOT ?? "./sample_docs",

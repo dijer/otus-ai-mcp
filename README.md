@@ -1,6 +1,6 @@
 # RAG Knowledge Base MCP (Node.js)
 
-MCP сервер локальной базы знаний с гибридным поиском и генерацией ответа через Ollama.
+MCP сервер локальной базы знаний по тактикам на боссов в Path of Exile 2 с гибридным поиском и генерацией ответа через Ollama.
 
 Текущий стек: Node.js + TypeScript.
 
@@ -68,8 +68,8 @@ npm run start
 
 - `MCP_APP_NAME`
 - `MCP_ENV`
-- `MCP_OLLAMA_MODEL`
-- `MCP_OLLAMA_BASE_URL`
+- `MCP_LLM_MODEL`
+- `MCP_LLM_BASE_URL`
 - `MCP_CHROMA_PATH`
 - `MCP_HISTORY_DB_PATH`
 - `MCP_INDEX_ROOT`
@@ -82,19 +82,19 @@ npm run start
 ## Пример smoke-проверки без IDE
 
 ```bash
-npx tsx -e "import { handleIndexStatus } from './src/tools/index_status.ts'; console.log(JSON.stringify(handleIndexStatus(), null, 2));"
+npx tsx -e "import { handleIndexStatus } from './src/tools/indexStatus.ts'; console.log(JSON.stringify(handleIndexStatus(), null, 2));"
 ```
 
 ```bash
-npx tsx -e "import { handleIndexFolder } from './src/tools/index_folder.ts'; console.log(JSON.stringify(handleIndexFolder('./sample_docs','**/*',false), null, 2));"
+npx tsx -e "import { handleIndexFolder } from './src/tools/indexFolder.ts'; console.log(JSON.stringify(handleIndexFolder('./sample_docs','**/*',false), null, 2));"
 ```
 
 ```bash
-npx tsx -e "import { handleFindRelevantDocs } from './src/tools/find_relevant_docs.ts'; console.log(JSON.stringify(handleFindRelevantDocs('Geonor phases',5), null, 2));"
+npx tsx -e "import { handleFindRelevantDocs } from './src/tools/findRelevantDocs.ts'; console.log(JSON.stringify(handleFindRelevantDocs('фазы графа геонора',5), null, 2));"
 ```
 
 ```bash
-npx tsx -e "import { handleAskQuestion } from './src/tools/ask_question.ts'; (async () => { const r = await handleAskQuestion('Какие фазы у Count Geonor?',5); console.log(JSON.stringify(r, null, 2)); })();"
+npx tsx -e "import { handleAskQuestion } from './src/tools/askQuestion.ts'; (async () => { const r = await handleAskQuestion('Как безопасно проходить вторую фазу графа геонора?',5); console.log(JSON.stringify(r, null, 2)); })();"
 ```
 
 ## Подключение MCP в VS Code

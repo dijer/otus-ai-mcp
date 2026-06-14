@@ -109,7 +109,7 @@ export const findRelevant = (
   topK: number,
 ): {
   results: Array<Record<string, unknown>>;
-  ranking_trace: Record<string, unknown>;
+  rankingTrace: Record<string, unknown>;
 } => {
   const settings = getSettings();
   const dataDir = path.dirname(path.resolve(settings.historyDbPath));
@@ -118,11 +118,11 @@ export const findRelevant = (
   if (chunks.length === 0) {
     return {
       results: [],
-      ranking_trace: {
-        bm25_hits: [],
-        vector_hits: [],
-        rrf_candidates: [],
-        final_order: [],
+      rankingTrace: {
+        bm25Hits: [],
+        vectorHits: [],
+        rrfCandidates: [],
+        finalOrder: [],
       },
     };
   }
@@ -146,7 +146,7 @@ export const findRelevant = (
       return {
         rank: idx + 1,
         score: item.score,
-        chunk_id: chunk.id,
+        chunkId: chunk.id,
         text: chunk.text,
         metadata: chunk.metadata,
       };
@@ -158,11 +158,11 @@ export const findRelevant = (
 
   return {
     results,
-    ranking_trace: {
-      bm25_hits: sortByScore(bm25).slice(0, topK),
-      vector_hits: sortByScore(vector).slice(0, topK),
-      rrf_candidates: sortByScore(fused).slice(0, topK * 2),
-      final_order: fusedRanked,
+    rankingTrace: {
+      bm25Hits: sortByScore(bm25).slice(0, topK),
+      vectorHits: sortByScore(vector).slice(0, topK),
+      rrfCandidates: sortByScore(fused).slice(0, topK * 2),
+      finalOrder: fusedRanked,
     },
   };
 };

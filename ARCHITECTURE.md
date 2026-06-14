@@ -2,7 +2,7 @@
 
 ## 1. Цель
 
-Построить MCP-сервер локальной базы знаний по Path of Exile 2 с Corrective RAG, гибридным retrieval и хранением истории вызовов/ответов.
+Построить MCP-сервер локальной базы знаний по тактикам на боссов в Path of Exile 2 с Corrective RAG, гибридным retrieval и хранением истории вызовов/ответов.
 
 ## 2. Контекст и ограничения
 
@@ -27,10 +27,10 @@
 - Проброс request_id для трассировки.
 
 Модули:
-- tools/index_folder
-- tools/ask_question
-- tools/find_relevant_docs
-- tools/index_status
+- tools/indexFolder
+- tools/askQuestion
+- tools/findRelevantDocs
+- tools/indexStatus
 
 ### 3.2 Ingestion Layer (Indexing)
 
@@ -151,8 +151,8 @@
 ## 6. Конфигурация
 
 Ключевые параметры:
-- OLLAMA_MODEL
-- OLLAMA_BASE_URL
+- LLM_MODEL
+- LLM_BASE_URL
 - CHROMA_PATH
 - HISTORY_DB_PATH
 - INDEX_ROOT

@@ -29,12 +29,12 @@ const maybeGenerateWithOllama = async (
   const timer = setTimeout(() => controller.abort(), settings.graphTimeoutMs);
 
   try {
-    const response = await fetch(`${settings.ollamaBaseUrl}/api/chat`, {
+    const response = await fetch(`${settings.llmBaseUrl}/api/chat`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       signal: controller.signal,
       body: JSON.stringify({
-        model: settings.ollamaModel,
+        model: settings.llmModel,
         stream: false,
         messages: [{ role: "user", content: prompt }],
       }),
@@ -98,11 +98,11 @@ export const handleAskQuestion = async (
   return success({
     message: "Ответ сформирован",
     question,
-    rewritten_query: latestQuery,
+    rewrittenQuery: latestQuery,
     attempts,
     answer: generated ?? fallback,
     sources,
-    ranking_trace: latest.ranking_trace,
+    rankingTrace: latest.rankingTrace,
     stub: false,
   });
 };
