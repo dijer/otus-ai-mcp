@@ -27,7 +27,8 @@ export const createMcpServer = (): McpServer => {
       glob_pattern: z.string().default("**/*"),
       reindex: z.boolean().default(true),
     },
-    async ({ path, glob_pattern, reindex }) => asToolResult(handleIndexFolder(path, glob_pattern, reindex)),
+    async ({ path, glob_pattern, reindex }) =>
+      asToolResult(await handleIndexFolder(path, glob_pattern, reindex)),
   );
 
   server.tool(
@@ -47,7 +48,7 @@ export const createMcpServer = (): McpServer => {
       query: z.string(),
       top_k: z.number().int().positive().default(10),
     },
-    async ({ query, top_k }) => asToolResult(handleFindRelevantDocs(query, top_k)),
+    async ({ query, top_k }) => asToolResult(await handleFindRelevantDocs(query, top_k)),
   );
 
   server.tool(

@@ -22,7 +22,7 @@ const setupWorkspace = (): { docsDir: string; dbPath: string } => {
   return { docsDir, dbPath: path.join(base, "data", "history.db") };
 };
 
-test("integration: index_status -> index_folder -> index_status", () => {
+test("integration: index_status -> index_folder -> index_status", async () => {
   const ws = setupWorkspace();
   process.env.MCP_HISTORY_DB_PATH = ws.dbPath;
   process.env.MCP_LLM_BASE_URL = "http://127.0.0.1:1";
@@ -32,7 +32,7 @@ test("integration: index_status -> index_folder -> index_status", () => {
   const before = handleIndexStatus();
   assert.equal(before.ok, true);
 
-  const indexed = handleIndexFolder(ws.docsDir, "**/*", true);
+  const indexed = await handleIndexFolder(ws.docsDir, "**/*", true);
   assert.equal(indexed.ok, true);
   assert.equal(indexed.data?.indexedFiles, 1);
 
@@ -48,10 +48,10 @@ test("integration: find_relevant_docs and ask_question return sources", async ()
   process.env.MCP_GRAPH_TIMEOUT_MS = "200";
   resetSettingsCacheForTests();
 
-  const indexed = handleIndexFolder(ws.docsDir, "**/*", true);
+  const indexed = await handleIndexFolder(ws.docsDir, "**/*", true);
   assert.equal(indexed.ok, true);
 
-  const found = handleFindRelevantDocs("дуговой удар геонора", 5);
+  const found = await handleFindRelevantDocs("дуговой удар геонора", 5);
   assert.equal(found.ok, true);
   assert.ok(((found.data?.results as unknown[]) ?? []).length > 0);
 

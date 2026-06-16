@@ -3,16 +3,23 @@ services:
     image: ollama/ollama:latest
     container_name: poe2-ollama
     ports:
-      - "11434:11434"
+      - "11400:11434"
     volumes:
       - ollama_data:/root/.ollama
+    healthcheck:
+      test: ["CMD", "ollama", "list"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 10s
     restart: unless-stopped
 
   model-init:
     image: curlimages/curl:8.12.1
     container_name: poe2-ollama-model-init
     depends_on:
-      - ollama
+      ollama:
+        condition: service_healthy
     restart: "no"
     command:
       - sh
@@ -50,8 +57,16 @@ services:
       - ./data:/app/data
       - ./sample_docs:/app/sample_docs:ro
     depends_on:
-      - ollama
-      - model-init
+      ollama:
+        condition: service_healthy
+      model-init:
+        condition: service_completed_successfully
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://localhost:3001/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 10s
     restart: unless-stopped
 
 volumes:

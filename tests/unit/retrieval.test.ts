@@ -22,7 +22,7 @@ test("findRelevant returns ranked results and trace", async () => {
   resetSettingsCacheForTests();
 
   const { findRelevant } = await import("../../src/retrieval/hybrid.ts");
-  const out = findRelevant("рывок геонора", 3);
+  const out = await findRelevant("рывок геонора", 3);
 
   assert.ok(out.results.length > 0);
   assert.ok(Array.isArray((out.rankingTrace as { bm25Hits: unknown[] }).bm25Hits));
@@ -34,7 +34,7 @@ test("findRelevant on empty index returns empty arrays", async () => {
   resetSettingsCacheForTests();
 
   const { findRelevant } = await import("../../src/retrieval/hybrid.ts");
-  const out = findRelevant("что угодно", 5);
+  const out = await findRelevant("что угодно", 5);
 
   assert.equal(out.results.length, 0);
   assert.deepEqual(out.rankingTrace, {

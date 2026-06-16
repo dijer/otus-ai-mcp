@@ -15,6 +15,7 @@
   - find_relevant_docs
   - index_status
 - История MCP сохраняется локально в SQLite.
+- Стек проекта зафиксирован на Node.js.
 
 ## 3. Компоненты системы
 
@@ -41,18 +42,22 @@
 - Инкрементальная переиндексация.
 
 Выход:
-- Векторный индекс в Chroma.
+- Локальное хранилище чанков в JSON-файле.
+- Векторные представления в Chroma коллекции.
 - BM25 индекс.
 - Статистика индекса.
 
 ### 3.3 Retrieval Layer
 
 Назначение:
-- BM25 retrieval (sparse).
+- BM25 retrieval (sparse) на самописной Okapi BM25 реализации.
 - Vector retrieval (dense).
 - RRF fusion.
 - Дедуп и обрезка top_k.
 - Формирование ranking trace.
+
+Примечание по требованиям:
+- Требование по BM25 закрывается самописной реализацией в Node.js без внешней BM25-библиотеки.
 
 ### 3.4 Orchestration Layer (Corrective RAG Graph)
 
@@ -61,13 +66,16 @@
 - Retry до 2 при низкой релевантности.
 - Таймауты и fallback на каждом узле.
 
-Узлы:
+Узлы (LangGraph):
 - rewrite
-- retrieve_hybrid
-- grade_chunks
-- decision
-- broaden_query
+- retrieve
+- grade
+- broaden
 - generate
+
+Переходы:
+- `START -> rewrite -> retrieve -> grade`.
+- Условный переход после `grade`: при достаточной релевантности или исчерпании retry -> `generate`, иначе -> `broaden -> retrieve`.
 
 ### 3.5 History and Observability Layer
 
@@ -81,11 +89,18 @@
 
 ## 4. Хранилища данных
 
-### 4.1 Chroma (Vector Store)
+### 4.1 Локальный индекс чанков (JSON)
 
 Содержит:
-- embeddings чанков
+- текст чанков
 - метаданные чанков
+
+Файл:
+- ./data/chunks.json
+
+Векторное хранилище:
+- ChromaDB (коллекция `poe2_chunks`) хранит embeddings и метаданные для vector retrieval.
+- Режим работы: in-process (встроенная база данных в приложении, не требует отдельного сервера).
 
 ### 4.2 BM25 Index
 
@@ -175,7 +190,7 @@
 Сервисы docker compose:
 - mcp-server
 - ollama
-- model-init (опционально подготовка модели)
+- model-init (подготовка модели Ollama)
 
 Локальные директории:
 - ./data/chroma

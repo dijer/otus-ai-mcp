@@ -104,7 +104,15 @@ const chunkText = (
   return chunks;
 };
 
-const parseJsonLines = (filePath: string): ChunkRecord[] => {
+const readChunksJson = (filePath: string): ChunkRecord[] => {
+  if (!fs.existsSync(filePath)) {
+    return [];
+  }
+  const parsed = readJsonSafe<unknown>(filePath, []);
+  return Array.isArray(parsed) ? (parsed as ChunkRecord[]) : [];
+};
+
+const parseLegacyJsonLines = (filePath: string): ChunkRecord[] => {
   if (!fs.existsSync(filePath)) {
     return [];
   }
@@ -120,17 +128,21 @@ const parseJsonLines = (filePath: string): ChunkRecord[] => {
   return parsed;
 };
 
-const writeJsonLines = (filePath: string, records: ChunkRecord[]): void => {
-  const payload = records.map((item) => JSON.stringify(item)).join("\n");
-  fs.writeFileSync(filePath, payload ? `${payload}\n` : "", "utf-8");
+const writeChunksJson = (filePath: string, records: ChunkRecord[]): void => {
+  fs.writeFileSync(filePath, JSON.stringify(records, null, 2), "utf-8");
 };
 
-const getDataPaths = (dataDir: string): { manifestPath: string; chunksPath: string } => {
+const getDataPaths = (dataDir: string): {
+  manifestPath: string;
+  chunksPath: string;
+  legacyChunksPath: string;
+} => {
   const absDataDir = path.resolve(dataDir);
   ensureDir(absDataDir);
   return {
     manifestPath: path.join(absDataDir, "index_manifest.json"),
-    chunksPath: path.join(absDataDir, "chunks.jsonl"),
+    chunksPath: path.join(absDataDir, "chunks.json"),
+    legacyChunksPath: path.join(absDataDir, "chunks.jsonl"),
   };
 };
 
@@ -154,7 +166,7 @@ export const indexDocuments = (params: {
   } = params;
 
   const absRoot = path.resolve(rootPath);
-  const { manifestPath, chunksPath } = getDataPaths(dataDir);
+  const { manifestPath, chunksPath, legacyChunksPath } = getDataPaths(dataDir);
 
   const previousManifest = readJsonSafe<Manifest>(manifestPath, {
     files: {},
@@ -163,7 +175,8 @@ export const indexDocuments = (params: {
     lastIndexedAt: null,
   });
 
-  const previousChunks = parseJsonLines(chunksPath);
+  const previousChunks =
+    readChunksJson(chunksPath).length > 0 ? readChunksJson(chunksPath) : parseLegacyJsonLines(legacyChunksPath);
   const previousBySource = new Map<string, ChunkRecord[]>();
   for (const chunk of previousChunks) {
     const source = chunk.metadata.source;
@@ -254,7 +267,10 @@ export const indexDocuments = (params: {
   };
 
   fs.writeFileSync(manifestPath, JSON.stringify(nextManifest, null, 2), "utf-8");
-  writeJsonLines(chunksPath, finalChunks);
+  writeChunksJson(chunksPath, finalChunks);
+  if (fs.existsSync(legacyChunksPath)) {
+    fs.rmSync(legacyChunksPath, { force: true });
+  }
 
   return {
     path: absRoot,
@@ -290,6 +306,10 @@ export const readIndexStatus = (dataDir: string): Record<string, unknown> => {
 };
 
 export const readAllChunks = (dataDir: string): ChunkRecord[] => {
-  const { chunksPath } = getDataPaths(dataDir);
-  return parseJsonLines(chunksPath);
+  const { chunksPath, legacyChunksPath } = getDataPaths(dataDir);
+  const chunks = readChunksJson(chunksPath);
+  if (chunks.length > 0) {
+    return chunks;
+  }
+  return parseLegacyJsonLines(legacyChunksPath);
 };

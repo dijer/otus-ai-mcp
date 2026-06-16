@@ -19,8 +19,9 @@ pnpm-debug.log*
 .env.*
 !.env.example
 
-# Local runtime data
-/data/
+# Local runtime data (keep dir, ignore runtime files)
+/data/*
+!/data/.gitkeep
 
 # VS Code local state (keep project MCP config)
 .vscode/*

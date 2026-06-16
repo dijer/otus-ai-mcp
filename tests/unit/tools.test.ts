@@ -5,20 +5,20 @@ import { handleFindRelevantDocs } from "../../src/tools/findRelevantDocs.ts";
 import { handleIndexFolder } from "../../src/tools/indexFolder.ts";
 import { handleAskQuestion } from "../../src/tools/askQuestion.ts";
 
-test("index_folder validates empty path", () => {
-  const out = handleIndexFolder("", "**/*", false);
+test("index_folder validates empty path", async () => {
+  const out = await handleIndexFolder("", "**/*", false);
   assert.equal(out.ok, false);
   assert.equal(out.error?.code, "INDEX_PATH_INVALID");
 });
 
-test("index_folder validates missing path", () => {
-  const out = handleIndexFolder("./definitely-missing-dir", "**/*", false);
+test("index_folder validates missing path", async () => {
+  const out = await handleIndexFolder("./definitely-missing-dir", "**/*", false);
   assert.equal(out.ok, false);
   assert.equal(out.error?.code, "INDEX_PATH_NOT_FOUND");
 });
 
-test("find_relevant_docs validates short query", () => {
-  const out = handleFindRelevantDocs("x", 5);
+test("find_relevant_docs validates short query", async () => {
+  const out = await handleFindRelevantDocs("x", 5);
   assert.equal(out.ok, false);
   assert.equal(out.error?.code, "FIND_QUERY_INVALID");
 });

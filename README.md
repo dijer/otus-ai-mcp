@@ -13,7 +13,7 @@ MCP сервер локальной базы знаний по тактикам 
   - `find_relevant_docs(query, top_k)`
   - `ask_question(question, top_k)`
 - Индексация файлов с чанкингом и инкрементальной переиндексацией.
-- Гибридный retrieval: BM25 + cosine + RRF.
+- Гибридный retrieval: BM25 + embedding cosine + RRF.
 - Базовый retry в `ask_question` + генерация через Ollama API.
 
 ## Структура
@@ -130,6 +130,25 @@ npx tsx -e "import { handleAskQuestion } from './src/tools/askQuestion.ts'; (asy
 - Ответ про количество боссов должен содержать `5` (из `allActsKeyBosses.md`).
 - Проверка по Zekoa должна содержать: `throws a banana at the player on death`.
 
+## Чистый старт (для проверки)
+
+После `git clone` директория `data/` уже создана, но пуста — индекс не проиндексирован.
+Это значит первый `index_status()` вернет пустое состояние:
+
+```json
+{"ok":true,"data":{"isIndexed":false,"filesCount":0,"chunksCount":13,"lastIndexedAt":null}}
+```
+
+Если нужно сбросить индекс вручную (например, перед демо):
+
+```bash
+docker compose down
+rm data/chunks.json data/chunks.jsonl data/index_manifest.json data/history.db
+docker compose up --build
+```
+
+После этого `index_status()` снова вернет пустое состояние.
+
 ## Docker Compose
 
 Запуск сервера в контейнере:
@@ -139,18 +158,63 @@ docker compose up --build
 ```
 
 Важно:
-- Compose поднимает `mcp + ollama + model-init` одной командой.
+- Compose поднимает `mcp + chroma + ollama + model-init` одной командой.
 - На первом запуске `model-init` скачивает `qwen2.5:3b`, это может занять время.
+- `mcp` стартует после запуска `chroma` и готовности `ollama` с загруженной моделью.
+
+Проверка готовности:
+
+```bash
+curl http://localhost:3001/health
+```
+
+Ожидаемый ответ:
+
+```json
+{"ok":true,"name":"poe2-rag-mcp"}
+```
+
+Остановка:
+
+```bash
+docker compose down
+```
 
 ## Подключение MCP в VS Code
 
-Файл конфигурации: `.vscode/mcp.json`.
+Для проверки преподавателем рекомендуется подключение к уже поднятому Docker-сервису по HTTP.
 
-Текущая конфигурация запускает сервер через `npx tsx src/server/main.ts`.
+1. Подними сервисы:
+
+```bash
+docker compose up --build
+```
+
+2. Убедись, что сервер доступен:
+
+```bash
+curl http://localhost:3001/health
+```
+
+3. Добавь MCP-конфиг в VS Code с HTTP transport:
+
+```json
+{
+  "servers": {
+    "poe2-rag-mcp": {
+      "type": "http",
+      "url": "http://localhost:3001/mcp"
+    }
+  }
+}
+```
+
+Этот вариант не требует локальных абсолютных путей и подходит для проверки из любого проекта.
 
 ## Ограничения текущей версии
 
 - Пока нет полного LangGraph-пайплайна (реализован упрощенный corrective flow).
+- Для локальных unit/integration тестов используется fallback в память, если Chroma недоступна.
 
 ## CI
 
