@@ -167,6 +167,10 @@ Rollback:
 - Условный переход в `addConditionalEdges`: при нехватке релевантных чанков идем в `broaden` и повторяем retrieval.
 - Retry ограничен `MCP_GRAPH_MAX_RETRIES` (по умолчанию 2), счетчик и трасса возвращаются в ответе.
 
+Комментарий по объему реализации:
+- Реализован функциональный Corrective RAG граф для задач курса.
+- Не включались production-расширения (persisted state между сессиями графа, human-in-the-loop ветки, отдельный observability-контур LangGraph Studio).
+
 Definition of Done:
 - `ask_question` проходит сценарии: достаточная релевантность, недостаточная релевантность, деградация при ошибке LLM.
 - В ответе есть `attempts`, `rewrittenQuery`, `sources`.
