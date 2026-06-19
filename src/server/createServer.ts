@@ -21,7 +21,7 @@ export const createMcpServer = (): McpServer => {
 
   server.tool(
     "index_folder",
-    "Индексирует папку документов базы знаний по тактикам на боссов в Path of Exile 2. Используется при первом запуске или после обновления документов.",
+    "Indexes a knowledge-base folder by scanning files, splitting them into chunks, and storing embeddings for retrieval. Use on first run or after document updates.",
     {
       path: z.string().default("./sample_docs"),
       glob_pattern: z.string().default("**/*"),
@@ -33,7 +33,7 @@ export const createMcpServer = (): McpServer => {
 
   server.tool(
     "ask_question",
-    "Отвечает на вопрос пользователя по локальной базе знаний с тактиками на боссов в Path of Exile 2 (фазы, механики, окна урона, позиционирование).",
+    "Answers a user question from the local Path of Exile 2 tactics knowledge base using the full corrective RAG pipeline (rewrite, retrieve, grade, generate).",
     {
       question: z.string(),
       top_k: z.number().int().positive().default(8),
@@ -43,7 +43,7 @@ export const createMcpServer = (): McpServer => {
 
   server.tool(
     "find_relevant_docs",
-    "Возвращает релевантные чанки без генерации ответа. Полезно для проверки качества поиска и источников.",
+    "Returns ranked relevant chunks without generating a final answer. Useful for retrieval debugging and source verification.",
     {
       query: z.string(),
       top_k: z.number().int().positive().default(10),
@@ -53,7 +53,7 @@ export const createMcpServer = (): McpServer => {
 
   server.tool(
     "index_status",
-    "Показывает состояние индекса: количество файлов, чанков и время последней индексации.",
+    "Shows current index status, including file/chunk counts and the timestamp of the last indexing run.",
     {},
     async () => asToolResult(handleIndexStatus()),
   );

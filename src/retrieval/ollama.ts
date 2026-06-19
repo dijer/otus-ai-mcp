@@ -1,5 +1,7 @@
 import { getSettings } from "../config/settings.js";
 
+const hasCyrillic = (text: string): boolean => /[а-яё]/iu.test(text);
+
 const chat = async (prompt: string): Promise<string | null> => {
   const settings = getSettings();
   const controller = new AbortController();
@@ -60,10 +62,14 @@ export const generateFromSnippets = async (
     return null;
   }
 
+  const russian = hasCyrillic(question);
+
   const prompt = [
-    "Ответь кратко по контексту. Если данных мало, так и скажи.",
-    `Вопрос: ${question}`,
-    "Контекст:",
+    russian
+      ? "Ответь кратко по контексту и тем же языком, что и вопрос. Если данных мало, так и скажи."
+      : "Answer briefly using only the provided context and in the same language as the question. If data is insufficient, say so explicitly.",
+    russian ? `Вопрос: ${question}` : `Question: ${question}`,
+    russian ? "Контекст:" : "Context:",
     snippets.map((s, i) => `[${i + 1}] ${s}`).join("\n\n"),
   ].join("\n\n");
 

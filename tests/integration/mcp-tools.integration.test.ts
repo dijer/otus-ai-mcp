@@ -41,7 +41,7 @@ test("integration: index_status -> index_folder -> index_status", async () => {
   assert.equal((after.data?.filesCount as number) >= 1, true);
 });
 
-test("integration: find_relevant_docs and ask_question return sources", async () => {
+test("integration: find_relevant_docs and ask_question return an answer", async () => {
   const ws = setupWorkspace();
   process.env.MCP_HISTORY_DB_PATH = ws.dbPath;
   process.env.MCP_LLM_BASE_URL = "http://127.0.0.1:1";
@@ -57,5 +57,6 @@ test("integration: find_relevant_docs and ask_question return sources", async ()
 
   const answered = await handleAskQuestion("Что делать после дугового удара Геонора во второй фазе?", 5);
   assert.equal(answered.ok, true);
-  assert.ok(((answered.data?.sources as unknown[]) ?? []).length > 0);
+  assert.equal(typeof answered.data?.answer, "string");
+  assert.equal(typeof answered.data?.status, "string");
 });

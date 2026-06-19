@@ -23,6 +23,8 @@ type GradeItem = {
 	relevant: boolean;
 };
 
+const hasCyrillic = (text: string): boolean => /[а-яё]/iu.test(text);
+
 type AskGraphState = {
 	question: string;
 	topK: number;
@@ -199,10 +201,15 @@ export const runCorrectiveGraph = async (
 				.slice(0, 3);
 
 			const generated = await generateFromSnippets(state.question, snippets);
+			const russian = hasCyrillic(state.question);
 			const fallback =
 				snippets.length > 0
-					? `По найденным источникам: ${snippets.join("\n\n")}`
-					: "Недостаточно данных в индексе. Сначала выполните index_folder().";
+					? russian
+						? `По найденным источникам: ${snippets.join("\n\n")}`
+						: `From indexed sources: ${snippets.join("\n\n")}`
+					: russian
+						? "Недостаточно данных в индексе. Сначала выполните index_folder()."
+						: "Not enough data in the index. Run index_folder() first.";
 
 			const sources = state.latest.results
 				.map((item) => asChunk(item).metadata)
